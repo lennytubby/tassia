@@ -1,0 +1,66 @@
+#!/bin/bash
+sudo apt update
+# https://emcl-gitlab.iwr.uni-heidelberg.de/hiflow3.org/hiflow3/wikis/Documentation/Prerequisites
+sudo apt install build-essential -y
+sudo apt install cmake cmake-curses-gui -y
+sudo apt install mpi-default-dev -y
+sudo apt install libboost-dev -y
+sudo apt install libtinyxml2-dev -y
+sudo apt install paraview -y
+sudo apt install doxygen graphviz -y
+
+# Metis
+# Download:             http://glaros.dtc.umn.edu/gkhome/metis/metis/download
+# Installation guide:   ./Install.txt
+wget -P . http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.1.0.tar.gz
+gunzip metis-5.1.0.tar.gz
+tar -xvf metis-5.1.0.tar
+rm metis-5.1.0.tar
+cd metis-5.1.0
+# Edit the file include/metis.h and specify the IDXTYPEWIDTH
+make config
+make
+sudo make install
+cd ..
+
+# HDF5
+# Download:             https://portal.hdfgroup.org/display/support/HDF5+1.8.21
+# Installation guide:   https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/unpacked/release_docs/
+wget -P . https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz
+gunzip hdf5-1.8.21.tar.gz
+tar -xvf hdf5-1.8.21.tar
+rm hdf5-1.8.21.tar
+cd hdf5-1.8.21
+./configure --enable-parallel
+make
+# make check: Error 1
+sudo make install
+# sudo make check-install: ok
+cd ..
+
+# Hypre
+# Download:             https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/software
+# Installation guide:   https://computing.llnl.gov/sites/default/files/public/hypre-2.11.2_usr_manual.pdf
+wget -P . https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz
+gunzip hypre-2.11.2.tar.gz
+tar -xvf hypre-2.11.2.tar
+rm hypre-2.11.2.tar
+cd hypre-2.11.2/src
+sudo apt install gfortran # neccessary to complete ./configure
+./configure
+make
+cd ../..
+
+# Does not work use git tassia
+# ILU++
+# https://github.com/CognitionGuidedSurgery/ILUpp
+sudo apt install git -y
+git clone https://github.com/CognitionGuidedSurgery/ILUpp
+cd ILUpp
+make clean
+make
+cd ..
+
+# HighFlow
+# Download: https://emcl-gitlab.iwr.uni-heidelberg.de/hiflow3.org/hiflow3/wikis/Documentation/Installation
+wget -P . https://emcl-gitlab.iwr.uni-heidelberg.de/hiflow3.org/hiflow3/
