@@ -5,9 +5,16 @@ sudo apt install build-essential -y
 sudo apt install cmake cmake-curses-gui -y
 sudo apt install mpi-default-dev -y
 sudo apt install libboost-dev -y
-sudo apt install libtinyxml2-dev -y
+#sudo apt install libtinyxml2-dev -y
 sudo apt install paraview -y
 sudo apt install doxygen graphviz -y
+
+# TinyXML install
+git clone https://github.com/leethomason/tinyxml2.git
+cd tinyxml2
+make
+sudo make install
+cd ..
 
 # Metis
 # Download:             http://glaros.dtc.umn.edu/gkhome/metis/metis/download
@@ -46,7 +53,7 @@ gunzip hypre-2.11.2.tar.gz
 tar -xvf hypre-2.11.2.tar
 rm hypre-2.11.2.tar
 cd hypre-2.11.2/src
-sudo apt install gfortran # neccessary to complete ./configure
+sudo apt install gfortran -y # neccessary to complete ./configure
 ./configure
 make
 cd ../..
@@ -66,16 +73,11 @@ sudo apt-get install libz-dev -y
 # HighFlow
 # Download: https://emcl-gitlab.iwr.uni-heidelberg.de/hiflow3.org/hiflow3/wikis/Documentation/Installation
 wget -P . https://emcl-gitlab.iwr.uni-heidelberg.de/hiflow3.org/hiflow3/-/archive/master/hiflow3-master.tar.gz --no-check-certificate
-gunzip hiflow3-master.tar.gz
-tar -xvf hiflow3-master.tar
-rm hiflow3-master.tar
-cd hiflow3-master
 # Projects
-mkdir -p /path/to/projects
-mv HiFlow3.tar.gz /path/to/projects/
-cd /path/to/projects
+mkdir ./projects
+mv hiflow3-master.tar.gz ./projects/HiFlow3.tar.gz
+cd projects
 tar -zxf HiFlow3.tar.gz
-cd ..
 # Build Dir
 mkdir -p HiFlow3/build
 cd HiFlow3/build
