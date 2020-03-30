@@ -1,4 +1,35 @@
-sudo apt install virtualbox
-wget -P . https://download.virtualbox.org/virtualbox/6.1.4/Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpack
-sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpac -y
-VBoxManage createvm --name HighFlowVM --basefolder . --ostype Ubuntu_64 --registe
+# Dependencies
+# https://www.andreafortuna.org/2019/10/24/how-to-create-a-virtualbox-vm-from-command-line/
+sudo apt install virtualbox -y
+if [ ! -f ./Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpack ]; then
+   wget -P . https://download.virtualbox.org/virtualbox/6.1.4/Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpack
+fi
+if [ ! -f ./ubuntu.iso ]; then
+   wget -P . http://releases.ubuntu.com/18.04.4/ubuntu-18.04.4-desktop-amd64.iso -O ubuntu.iso
+fi
+sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpac
+#rm Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpack
+
+
+# Create VM
+VBoxManage createvm --name HighFlowVM --basefolder . --ostype Ubuntu_64 --register
+
+# Set memory and network
+VBoxManage modifyvm HighFlowVM --ioapic on                     
+VBoxManage modifyvm HighFlowVM --memory 4096 --vram 128
+VBoxManage modifyvm HighFlowVM --nic1 nat 
+
+# Create Disk and connect Ubuntu Iso
+VBoxManage createhd --filename ./HighFlowVM/HighFlowVM_DISK.vdi --size 10000 --format VDI                     
+VBoxManage storagectl HighFlowVM --name "SATA Controller" --add sata --controller IntelAhci       
+VBoxManage storageattach HighFlowVM --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium  ./HighFlowVM/HighFlowVM_DISK.vdi                
+VBoxManage storagectl HighFlowVM --name "IDE Controller" --add ide --controller PIIX4       
+VBoxManage storageattach HighFlowVM --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium ./ubuntu.iso       
+VBoxManage modifyvm HighFlowVM --boot1 dvd --boot2 disk --boot3 none --boot4 none
+
+#Enable RDP
+#VBoxManage modifyvm HighFlowVM --vrde on
+#VBoxManage modifyvm HighFlowVM --vrdemulticon on --vrdeport 10001
+
+# Start VM
+VBoxManage startvm HighFlowVM
