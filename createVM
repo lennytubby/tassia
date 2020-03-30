@@ -1,0 +1,4 @@
+sudo apt install virtualbox
+wget -P . https://download.virtualbox.org/virtualbox/6.1.4/Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpack
+sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.1.4.vbox-extpac -y
+VBoxManage createvm --name HighFlowVM --basefolder . --ostype Ubuntu_64 --registe
